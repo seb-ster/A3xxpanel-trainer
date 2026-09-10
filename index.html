@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overhead Panel Images Stack</title>
+    <style>
+        body {
+            /* Center content vertically and horizontally */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column; /* Vertical stack */
+            align-items: center; /* Center images horizontally */
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Wrapper for containing image and label */
+        .image-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column; /* Stacks image and button vertically */
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0; /* Ensures no gap between wrapped images */
+        }
+
+        .image-wrapper img {
+            /* Image styling: Adjusted to minimize apparent background */
+            display: block;
+            width: auto; 
+            max-width: 100%;
+            height: auto;
+            box-shadow: none; /* REMOVED SHADOW FOR TRANSPARENCY */
+            border: none; /* Ensure no default borders */
+            display: block;
+        }
+
+        /* Styling for the number overlay (on the image) */
+        .overlay-number {
+            position: absolute;
+            top: 10px; 
+            left: 10px; 
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        /* Styling for the clickable panel label/button */
+        .panel-button {
+            margin-top: 10px; /* Adds space between image and button */
+            padding: 10px 20px;
+            background-color: #007bff; /* Primary button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            text-align: center;
+            width: 80%; 
+            box-sizing: border-box;
+        }
+
+        .panel-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body >
+    <div class="image-container">
+        <h1 style="width: 100%; text-align: center;">Overhead Panel Images (Numbered Stack)</h1>
+        
+        <!-- Panel 1: Hydraulic Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">1</div>
+            <img src="overhead/Hydraulic-Panel.jpg" alt="Hydraulic Panel">
+            <button class="panel-button">Hydraulic Panel <dot></dot></button>
+        </div>
+        
+        <!-- Panel 2: A320 Overhead Fire Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">2</div>
+            <img src="overhead/a320-ovhd-fire.webp" alt="A320 Overhead Fire Panel">
+            <button class="panel-button">Fire Panel <dot></dot></button>
+        </div>
+        
+        <!-- Panel 3: AAPU EXT LGT -->
+        <div class="image-wrapper">
+            <div class="overlay-number">3</div>
+            <img src="overhead/aapu ext lgt.png" alt="AAPU EXT LGT">
+            <button class="panel-button">AAPU EXT LGT <dot></dot></button>
+        </div>
+        
+        <!-- Panel 4: Electrical Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">4</div>
+            <img src="overhead/elec.webp" alt="Electrical Panel">
+            <button class="panel-button">Electrical Panel <dot></dot></button>
+        </div>
+        
+        <!-- Panel 5: Ice and Man Press Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">5</div>
+            <img src="overhead/ice and man pres.jpg" alt="Ice and Man Press Panel">
+            <button class="panel-button">Ice and Man Press <dot></dot></button>
+        </div>
+        
+        <!-- Panel 6: Integrated Light Panel (Targeted for transparency) -->
+        <div class="image-wrapper">
+            <div class="overlay-number">6</div>
+            <img src="overhead/intg lgt.jpg" alt="Integrated Light Panel">
+            <button class="panel-button">Integrated Light Panel <dot></dot></button>
+        </div>
+        
+        <!-- Panel 7: Lights AAPU Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">7</div>
+            <img src="overhead/l ights &apu.png" alt="Lights AAPU Panel">
+            <button class="panel-button">Lights AAPU Panel <dot></dot></button>
+        </div>
+        
+        <!-- Panel 8: Pressurization Panel -->
+        <div class="image-wrapper">
+            <div class="overlay-number">8</div>
+            <img src="overhead/ptessurizstion.webp" alt="Pressurization Panel">
+            <button class="panel-button">Pressurization Panel <dot></dot></button>
+        </div>
+        
+    </div >
+</body>
+</html>

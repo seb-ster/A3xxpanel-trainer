@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A320 Overhead Panel Trainer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(0, 150, 255, 0.1) 100%);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #bbb;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .panel-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .panel {
+            background: #0f0f1e;
+            border: 2px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            border-color: #ff6b35;
+            box-shadow: 0 12px 40px rgba(255, 107, 53, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .panel-header {
+            background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
+            padding: 16px 24px;
+            border-bottom: 3px solid #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-header h2 {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            flex: 1;
+        }
+
+        .panel-number {
+            display: inline-block;
+            background: #ff6b35;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .panel-content {
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .panel-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            width: 100%;
+            object-fit: contain;
+            background: #1a1a2e;
+        }
+
+        .panel-description {
+            padding: 20px 24px;
+            background: rgba(255, 107, 53, 0.05);
+            border-top: 1px solid #333;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #aaa;
+        }
+
+        .panel-description strong {
+            color: #ff6b35;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .panel-stack {
+                gap: 20px;
+            }
+
+            .panel-header {
+                padding: 14px 16px;
+            }
+
+            .panel-header h2 {
+                font-size: 16px;
+            }
+
+            .panel-content {
+                min-height: 250px;
+            }
+        }
+
+        /* Panel-specific styling */
+        .panel.circuit-breaker {
+            border-color: #0f6;
+        }
+
+        .panel.circuit-breaker .panel-header {
+            border-bottom-color: #0f6;
+            background: linear-gradient(90deg, rgba(0, 255, 102, 0.1) 0%, rgba(0, 150, 255, 0.1) 100%);
+        }
+
+        .panel.fire-suppression {
+            border-color: #ff6b35;
+        }
+
+        .panel.fire-suppression .panel-header {
+            border-bottom-color: #ff6b35;
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 107, 53, 0.05) 100%);
+        }
+
+        .panel.electrical {
+            border-color: #0099ff;
+        }
+
+        .panel.electrical .panel-header {
+            border-bottom-color: #0099ff;
+            background: linear-gradient(90deg, rgba(0, 153, 255, 0.1) 0%, rgba(0, 150, 255, 0.1) 100%);
+        }
+
+        .panel.overhead {
+            border-color: #ffcc00;
+        }
+
+        .panel.overhead .panel-header {
+            border-bottom-color: #ffcc00;
+            background: linear-gradient(90deg, rgba(255, 204, 0, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #333;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .learning-notes {
+            background: rgba(0, 153, 255, 0.05);
+            border-left: 3px solid #0099ff;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>✈️ A320 OVERHEAD PANEL TRAINER</h1>
+            <p>Complete Flight Deck System Reference</p>
+        </div>
+
+        <!-- Panel Stack -->
+        <div class="panel-stack">
+            <!-- Circuit Breaker Panel -->
+            <div class="panel circuit-breaker">
+                <div class="panel-header">
+                    <div class="panel-number">1</div>
+                    <h2>Circuit Breaker Panel</h2>
+                </div>
+                <div class="panel-content">
+                    <img src="/root/.claude/uploads/117da17f-f792-59ef-a721-96b6054352eb/0715e288-image.png" alt="A320 Circuit Breaker Panel">
+                </div>
+                <div class="panel-description">
+                    <strong>Circuit Breaker Panel:</strong> The top section displays all electrical circuit breakers for the aircraft systems. Each breaker protects a specific aircraft system from electrical overcurrent. Green indicators show armed/normal status, and black indicators show tripped/fault conditions. This is the primary electrical protection system for all aircraft electronics and equipment.
+                    <div class="learning-notes">
+                        <strong>Key Points:</strong> Familiarize yourself with common breaker trips, understand which systems are protected by each breaker section, and learn the proper procedures for resetting tripped breakers.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Suppression Panel -->
+            <div class="panel fire-suppression">
+                <div class="panel-header">
+                    <div class="panel-number">2</div>
+                    <h2>Fire Suppression System</h2>
+                </div>
+                <div class="panel-content">
+                    <img src="/root/.claude/uploads/117da17f-f792-59ef-a721-96b6054352eb/3edcecd4-image.webp" alt="A320 Fire Suppression Panel">
+                </div>
+                <div class="panel-description">
+                    <strong>Fire Suppression Panel:</strong> Located at the bottom of the overhead, this critical safety system allows flight crew to detect and suppress fires in three locations: Engine 1, APU, and Engine 2. The large red FIRE PUSH buttons discharge fire suppressant (Halon 1301) into the affected engine compartment. SQUIB DISCH and TEST buttons are used for system verification and maintenance.
+                    <div class="learning-notes">
+                        <strong>Key Points:</strong> These are safety-critical controls - understand the proper sequence for fire detection and suppression, know the fire detection system logic, and memorize the emergency procedures for engine fires.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Electrical System Diagram -->
+            <div class="panel electrical">
+                <div class="panel-header">
+                    <div class="panel-number">3</div>
+                    <h2>Electrical System Architecture</h2>
+                </div>
+                <div class="panel-content">
+                    <img src="/root/.claude/uploads/117da17f-f792-59ef-a721-96b6054352eb/0c06a676-image.png" alt="A320 Electrical System Diagram">
+                </div>
+                <div class="panel-description">
+                    <strong>Electrical System Diagram:</strong> Shows the complete electrical power distribution network, including AC buses, DC buses, batteries, generators, and backup power sources. The green lines represent electrical connections and power flow paths. This schematic helps understand how electrical power is generated, distributed, and managed throughout the aircraft.
+                    <div class="learning-notes">
+                        <strong>Key Points:</strong> Understand DC vs AC power distribution, battery management, generator operation and redundancy, and electrical bus priorities during system failures.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Overhead Controls -->
+            <div class="panel overhead">
+                <div class="panel-header">
+                    <div class="panel-number">4</div>
+                    <h2>Main Overhead Controls Panel</h2>
+                </div>
+                <div class="panel-content">
+                    <img src="/root/.claude/uploads/117da17f-f792-59ef-a721-96b6054352eb/b2dba7f5-image.png" alt="A320 Complete Overhead Panel">
+                </div>
+                <div class="panel-description">
+                    <strong>Main Overhead Controls:</strong> The central section contains all major flight control systems including anti-ice systems, pneumatic distribution, hydraulic systems, air conditioning, pressurization, and lighting controls. Multiple colored indicators show system status (green = normal, amber/red = caution/warning). This panel represents the core of the aircraft's environmental and mechanical systems.
+                    <div class="learning-notes">
+                        <strong>Key Points:</strong> Master all system controls, understand system interactions and dependencies, learn normal operating procedures and emergency configurations, and practice system management under various flight conditions.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>A320 Overhead Panel Trainer | For Training Purposes Only | Reference: Airbus A320 Training Manual</p>
+            <p>Use this trainer to familiarize yourself with all overhead panel systems and controls</p>
+        </div>
+    </div>
+</body>
+</html>
