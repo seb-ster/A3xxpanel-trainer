@@ -52,6 +52,7 @@
             padding: 12px;
             border-radius: 6px;
             text-align: center;
+            position: relative;
         }
 
         .control-label {
@@ -61,6 +62,34 @@
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #444;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+
+        .status-indicator.green {
+            background: #00dd00;
+            box-shadow: 0 0 4px #00dd00, inset 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .status-indicator.orange {
+            background: #ff8800;
+            box-shadow: 0 0 4px #ff8800, inset 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .status-indicator.white {
+            background: #cccccc;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
         }
 
         .toggle-switch {
@@ -211,14 +240,20 @@
             <div class="section-title">Pack Controls</div>
             <div class="panel-grid">
                 <div class="control-group">
-                    <div class="control-label">Pack 1</div>
+                    <div class="control-label">
+                        <span class="status-indicator green"></span>
+                        Pack 1
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn active" data-control="pack1" data-value="ON">ON</button>
                         <button class="switch-btn" data-control="pack1" data-value="OFF">OFF</button>
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">Pack 2</div>
+                    <div class="control-label">
+                        <span class="status-indicator green"></span>
+                        Pack 2
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn active" data-control="pack2" data-value="ON">ON</button>
                         <button class="switch-btn" data-control="pack2" data-value="OFF">OFF</button>
@@ -232,28 +267,40 @@
             <div class="section-title">Bleed Air</div>
             <div class="panel-grid">
                 <div class="control-group">
-                    <div class="control-label">ENG 1 Bleed</div>
+                    <div class="control-label">
+                        <span class="status-indicator green"></span>
+                        ENG 1 Bleed
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn active" data-control="eng1Bleed" data-value="ON">ON</button>
                         <button class="switch-btn" data-control="eng1Bleed" data-value="OFF">OFF</button>
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">ENG 2 Bleed</div>
+                    <div class="control-label">
+                        <span class="status-indicator green"></span>
+                        ENG 2 Bleed
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn active" data-control="eng2Bleed" data-value="ON">ON</button>
                         <button class="switch-btn" data-control="eng2Bleed" data-value="OFF">OFF</button>
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">APU Bleed</div>
+                    <div class="control-label">
+                        <span class="status-indicator white"></span>
+                        APU Bleed
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn" data-control="apuBleed" data-value="ON">ON</button>
                         <button class="switch-btn active" data-control="apuBleed" data-value="OFF">OFF</button>
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">X Bleed</div>
+                    <div class="control-label">
+                        <span class="status-indicator white"></span>
+                        X Bleed
+                    </div>
                     <div class="toggle-switch">
                         <button class="switch-btn" data-control="xBleed" data-value="ON">ON</button>
                         <button class="switch-btn active" data-control="xBleed" data-value="OFF">OFF</button>
