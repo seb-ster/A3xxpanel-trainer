@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/C Panel Interactive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .ac-panel-container {
+            position: relative;
+            background: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .panel-image {
+            display: block;
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+        }
+
+        .control-overlay {
+            position: absolute;
+            cursor: pointer;
+            background: rgba(0, 255, 0, 0);
+            border: 2px solid rgba(0, 255, 0, 0);
+            transition: all 0.2s ease;
+        }
+
+        .control-overlay:hover {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: rgba(0, 255, 0, 0.6);
+        }
+
+        .control-overlay.active {
+            border-color: rgba(0, 255, 0, 0.8);
+            background: rgba(0, 255, 0, 0.15);
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        .control-label {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: #0ff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-overlay:hover .control-label {
+            opacity: 1;
+        }
+
+        .status-panel {
+            background: #0a0a0a;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            max-width: 1000px;
+            width: 100%;
+            font-size: 12px;
+            line-height: 1.8;
+            border: 1px solid #0f0;
+        }
+
+        .status-title {
+            color: #ff0;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-item {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .control-hint {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #0f0;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ac-panel-container" id="panelContainer">
+        <img id="panelImage" class="panel-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABpkAAAKECAIAAABzXMXCAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAGmaADAAQAAAABAAACh" alt="A/C Panel">
+    </div>
+
+    <div class="status-panel" id="statusPanel">
+        <div class="status-title">A/C System Status</div>
+        <div id="statusDisplay">
+            Pack Flow: NORM | Cockpit: MID | FWD: MID | AFT: MID | Pack 1: ON | Pack 2: ON
+        </div>
+    </div>
+
+    <div class="control-hint">
+        💡 Click on controls to toggle their state. The interactive areas are highlighted on hover.
+    </div>
+
+    <script>
+        class ACPanelInteractive {
+            constructor() {
+                this.panelContainer = document.getElementById('panelContainer');
+                this.panelImage = document.getElementById('panelImage');
+                
+                this.state = {
+                    packFlow: 'NORM',
+                    cockpitTemp: 'MID',
+                    fwdTemp: 'MID',
+                    aftTemp: 'MID',
+                    pack1: 'ON',
+                    pack2: 'ON',
+                    eng1Bleed: 'ON',
+                    eng2Bleed: 'ON',
+                    apuBleed: 'OFF',
+                    xBleed: 'OFF',
+                    ramAir: 'OFF',
+                    gndHp: 'OFF',
+                    hotAir: 'OFF'
+                };
+
+                // Control positions (x%, y%, width%, height%)
+                this.controls = [
+                    { id: 'packFlow', positions: [
+                        { value: 'LO', x: 2, y: 4, w: 8, h: 12 },
+                        { value: 'NORM', x: 4, y: 6, w: 8, h: 10 },
+                        { value: 'HI', x: 6, y: 4, w: 8, h: 12 }
+                    ], label: 'PACK FLOW' },
+                    
+                    { id: 'cockpitTemp', positions: [
+                        { value: 'COLD', x: 26, y: 18, w: 8, h: 8 },
+                        { value: 'HOT', x: 36, y: 18, w: 8, h: 8 }
+                    ], label: 'COCKPIT TEMP' },
+                    
+                    { id: 'fwdTemp', positions: [
+                        { value: 'COLD', x: 44, y: 18, w: 8, h: 8 },
+                        { value: 'HOT', x: 54, y: 18, w: 8, h: 8 }
+                    ], label: 'FWD TEMP' },
+                    
+                    { id: 'aftTemp', positions: [
+                        { value: 'COLD', x: 62, y: 18, w: 8, h: 8 },
+                        { value: 'HOT', x: 72, y: 18, w: 8, h: 8 }
+                    ], label: 'AFT TEMP' },
+
+                    { id: 'pack1', positions: [
+                        { value: 'ON', x: 12, y: 42, w: 10, h: 12 },
+                        { value: 'OFF', x: 12, y: 58, w: 10, h: 12 }
+                    ], label: 'PACK 1' },
+
+                    { id: 'pack2', positions: [
+                        { value: 'ON', x: 78, y: 42, w: 10, h: 12 },
+                        { value: 'OFF', x: 78, y: 58, w: 10, h: 12 }
+                    ], label: 'PACK 2' },
+
+                    { id: 'eng1Bleed', positions: [
+                        { value: 'ON', x: 15, y: 70, w: 12, h: 15 },
+                        { value: 'OFF', x: 15, y: 88, w: 12, h: 15 }
+                    ], label: 'ENG 1 BLEED' },
+
+                    { id: 'eng2Bleed', positions: [
+                        { value: 'ON', x: 73, y: 70, w: 12, h: 15 },
+                        { value: 'OFF', x: 73, y: 88, w: 12, h: 15 }
+                    ], label: 'ENG 2 BLEED' },
+
+                    { id: 'apuBleed', positions: [
+                        { value: 'ON', x: 44, y: 70, w: 10, h: 12 },
+                        { value: 'OFF', x: 44, y: 88, w: 10, h: 12 }
+                    ], label: 'APU BLEED' },
+                ];
+
+                this.init();
+            }
+
+            init() {
+                this.createControlOverlays();
+                this.panelImage.addEventListener('load', () => this.updateOverlayPositions());
+                this.updateStatus();
+            }
+
+            createControlOverlays() {
+                this.controls.forEach(control => {
+                    control.positions.forEach(pos => {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'control-overlay';
+                        overlay.dataset.control = control.id;
+                        overlay.dataset.value = pos.value;
+                        overlay.title = `${control.label}: ${pos.value}`;
+
+                        const label = document.createElement('div');
+                        label.className = 'control-label';
+                        label.textContent = `${control.label}\n${pos.value}`;
+
+                        overlay.appendChild(label);
+                        overlay.addEventListener('click', (e) => this.toggleControl(control.id, pos.value, overlay));
+                        
+                        this.panelContainer.appendChild(overlay);
+                    });
+                });
+
+                this.updateControlStates();
+            }
+
+            updateOverlayPositions() {
+                const rect = this.panelImage.getBoundingClientRect();
+                const containerRect = this.panelContainer.getBoundingClientRect();
+                
+                const overlays = this.panelContainer.querySelectorAll('.control-overlay');
+                overlays.forEach(overlay => {
+                    const control = this.controls.find(c => c.id === overlay.dataset.control);
+                    const pos = control.positions.find(p => p.value === overlay.dataset.value);
+                    
+                    overlay.style.left = (pos.x * rect.width / 100) + 'px';
+                    overlay.style.top = (pos.y * rect.height / 100) + 'px';
+                    overlay.style.width = (pos.w * rect.width / 100) + 'px';
+                    overlay.style.height = (pos.h * rect.height / 100) + 'px';
+                });
+            }
+
+            toggleControl(controlId, value, overlay) {
+                this.state[controlId] = value;
+                this.updateControlStates();
+                this.updateStatus();
+                
+                this.panelContainer.dispatchEvent(new CustomEvent('controlChange', {
+                    detail: { control: controlId, value: value, state: this.state }
+                }));
+            }
+
+            updateControlStates() {
+                Object.keys(this.state).forEach(control => {
+                    const overlays = this.panelContainer.querySelectorAll(
+                        `[data-control="${control}"]`
+                    );
+                    overlays.forEach(overlay => {
+                        overlay.classList.remove('active');
+                        if (overlay.dataset.value === this.state[control]) {
+                            overlay.classList.add('active');
+                        }
+                    });
+                });
+            }
+
+            updateStatus() {
+                const display = document.getElementById('statusDisplay');
+                display.innerHTML = `
+                    <div class="status-item"><strong>Pack Flow:</strong> ${this.state.packFlow}</div>
+                    <div class="status-item"><strong>Cockpit:</strong> ${this.state.cockpitTemp}</div>
+                    <div class="status-item"><strong>FWD:</strong> ${this.state.fwdTemp}</div>
+                    <div class="status-item"><strong>AFT:</strong> ${this.state.aftTemp}</div>
+                    <div class="status-item"><strong>Pack 1:</strong> ${this.state.pack1}</div>
+                    <div class="status-item"><strong>Pack 2:</strong> ${this.state.pack2}</div>
+                    <br>
+                    <div class="status-item"><strong>ENG 1:</strong> ${this.state.eng1Bleed}</div>
+                    <div class="status-item"><strong>ENG 2:</strong> ${this.state.eng2Bleed}</div>
+                    <div class="status-item"><strong>APU:</strong> ${this.state.apuBleed}</div>
+                `;
+            }
+
+            getState() {
+                return { ...this.state };
+            }
+        }
+
+        const acPanel = new ACPanelInteractive();
+
+        // Listen for control changes
+        document.getElementById('panelContainer').addEventListener('controlChange', (e) => {
+            console.log('Control Changed:', e.detail);
+        });
+    </script>
+</body>
+</html>
