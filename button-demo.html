@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dark Grey Button</title>
+    <style>
+        body {
+            background: #4a6fa5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .label {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .switch-btn {
+            width: 80px;
+            height: 80px;
+            background: #444;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .switch-btn:hover {
+            background: #555;
+        }
+
+        .switch-btn.active {
+            background: #00dd00;
+            color: black;
+            box-shadow: 0 0 16px rgba(0,221,0,0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <div class="label">OFF Button</div>
+        <button class="switch-btn">OFF</button>
+
+        <div class="label">ON Button</div>
+        <button class="switch-btn active">ON</button>
+    </div>
+</body>
+</html>
