@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Button Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+        }
+
+        .widget-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            min-width: 220px;
+        }
+
+        .widget-label {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toggle-button {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 0px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            user-select: none;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ON STATE - Dark button (all OK) */
+        .toggle-button.on {
+            background: #1a1a1a;
+            border-color: #333;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle-button.on:hover {
+            border-color: #444;
+            background: #222;
+        }
+
+        /* FAULT STATE - Yellow/Amber warning */
+        .toggle-button.fault {
+            background: #3d3a1a;
+            border-color: #8b8200;
+            box-shadow: 0 0 12px rgba(255, 200, 0, 0.4), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle-button.fault:hover {
+            border-color: #a5a000;
+            box-shadow: 0 0 16px rgba(255, 200, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* OFF STATE - White bright (action required) */
+        .toggle-button.off {
+            background: #f8f8f8;
+            border-color: #f5f5f5;
+            box-shadow: 0 0 18px rgba(245, 245, 245, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .toggle-button.off:hover {
+            border-color: #fff;
+            background: #fff;
+            box-shadow: 0 0 24px rgba(255, 255, 255, 1), inset 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Incandescent glow around labels */
+
+        /* State indicator with border */
+        .state-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .state-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border: 1.5px solid currentColor;
+            border-radius: 0px;
+            width: 100%;
+            text-align: center;
+            min-height: 18px;
+        }
+
+        .toggle-button.on .state-label {
+            color: rgba(102, 102, 102, 0.2);
+            border-color: rgba(102, 102, 102, 0.2);
+            content: "OFF";
+        }
+
+        .toggle-button.fault .state-label {
+            color: #d4af00;
+            border-color: #d4af00;
+            background: rgba(212, 175, 0, 0.1);
+        }
+
+        .toggle-button.off .state-label {
+            color: #333;
+            border-color: #333;
+            background: transparent;
+        }
+
+        /* LED Indicator Light */
+        .led-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #444;
+            background: #1a1a1a;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-button.on .led-indicator {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .toggle-button.fault .led-indicator {
+            background: #ffd700;
+            border-color: #8b8200;
+            box-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
+        }
+
+        .toggle-button.off .led-indicator {
+            background: #ffffff;
+            border-color: #999;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .demo-section {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .demo-title {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .state-display {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 3px solid #555;
+            color: #aaa;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .state-display.fault {
+            border-left-color: #d4af00;
+            color: #d4af00;
+        }
+
+        .state-display.off {
+            border-left-color: #f5f5f5;
+            color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Demo: System OK (Dark) -->
+<div class="widget-container">
+    <div class="widget-label">Bleed Air</div>
+    <div id="toggle1" class="toggle-button on" data-control="bleedAir" data-state="on">
+        <div class="state-indicator">
+            <div class="led-indicator"></div>
+            <div class="state-label">OFF</div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo: FAULT State (Amber) -->
+<div class="widget-container">
+    <div class="widget-label">Pack 1</div>
+    <div id="toggle2" class="toggle-button fault" data-control="pack1" data-state="fault">
+        <div class="state-indicator">
+            <div class="led-indicator"></div>
+            <div class="state-label">FAULT</div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo: OFF State (White) -->
+<div class="widget-container">
+    <div class="widget-label">Pack 2</div>
+    <div id="toggle3" class="toggle-button off" data-control="pack2" data-state="off">
+        <div class="state-indicator">
+            <div class="led-indicator"></div>
+            <div class="state-label">OFF</div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo: State Monitor -->
+<div class="demo-section">
+    <div class="demo-title">Click buttons to cycle states (ON → FAULT → OFF)</div>
+    <div id="stateDisplay" class="state-display">
+        Ready to interact...
+    </div>
+</div>
+
+<script>
+    /**
+     * ToggleButton - Three-state toggle widget (ON → FAULT → OFF)
+     * ON (dark): System normal
+     * FAULT (amber): System degraded/not ready
+     * OFF (white): Action required/system inactive
+     */
+    class ToggleButton {
+        constructor(element) {
+            this.element = element;
+            this.control = element.dataset.control || 'unknown';
+            this.states = ['on', 'fault', 'off'];
+            this.currentStateIndex = this.states.indexOf(element.dataset.state || 'on');
+
+            this.updateVisuals();
+            this.element.addEventListener('click', () => this.cycle());
+        }
+
+        cycle() {
+            this.currentStateIndex = (this.currentStateIndex + 1) % this.states.length;
+            this.updateVisuals();
+            this.emitChange();
+        }
+
+        updateVisuals() {
+            const currentState = this.states[this.currentStateIndex];
+
+            // Remove all state classes
+            this.element.classList.remove('on', 'fault', 'off');
+            this.element.classList.add(currentState);
+
+            // Update data attribute
+            this.element.dataset.state = currentState;
+
+            // Update state label - always show OFF outline, but change text based on state
+            const stateLabel = this.element.querySelector('.state-label');
+            if (stateLabel) {
+                if (currentState === 'on') {
+                    stateLabel.textContent = 'OFF';
+                } else if (currentState === 'fault') {
+                    stateLabel.textContent = 'FAULT';
+                } else if (currentState === 'off') {
+                    stateLabel.textContent = 'OFF';
+                }
+            }
+        }
+
+        getState() {
+            return {
+                control: this.control,
+                state: this.states[this.currentStateIndex]
+            };
+        }
+
+        setState(newState) {
+            if (this.states.includes(newState)) {
+                this.currentStateIndex = this.states.indexOf(newState);
+                this.updateVisuals();
+            }
+        }
+
+        emitChange() {
+            const event = new CustomEvent('controlChange', {
+                detail: {
+                    type: 'toggle',
+                    control: this.control,
+                    state: this.states[this.currentStateIndex],
+                    timestamp: Date.now()
+                },
+                bubbles: true,
+                cancelable: true
+            });
+            this.element.dispatchEvent(event);
+        }
+    }
+
+    // Initialize all toggle buttons
+    const toggles = {};
+    document.querySelectorAll('.toggle-button').forEach(el => {
+        const toggle = new ToggleButton(el);
+        toggles[el.id] = toggle;
+    });
+
+    // Demo: Listen to state changes
+    document.addEventListener('controlChange', (e) => {
+        const detail = e.detail;
+        const stateDisplay = document.getElementById('stateDisplay');
+
+        stateDisplay.textContent = `
+Control: ${detail.control}
+State: ${detail.state.toUpperCase()}
+Timestamp: ${new Date(detail.timestamp).toLocaleTimeString()}
+        `.trim();
+
+        stateDisplay.classList.remove('fault', 'off');
+        if (detail.state === 'fault') {
+            stateDisplay.classList.add('fault');
+        } else if (detail.state === 'off') {
+            stateDisplay.classList.add('off');
+        }
+    });
+
+    // Expose for programmatic use
+    window.ToggleButton = ToggleButton;
+    window.toggles = toggles;
+</script>
+
+</body>
+</html>
