@@ -32,7 +32,7 @@
 
         .button-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             padding: 40px;
             background: rgba(0, 0, 0, 0.3);
@@ -248,6 +248,51 @@
             50% { opacity: 0.6; box-shadow: 0 0 5px #00ff66; }
         }
 
+        @keyframes pulse-white {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px #ffffff; }
+            50% { opacity: 0.6; box-shadow: 0 0 5px #ffffff; }
+        }
+
+        .blended-button.off-state {
+            background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+        }
+
+        .blended-button.off-state::before {
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 100%);
+            border-color: #2a3a4a;
+        }
+
+        .blended-button.off-state .blended-main {
+            color: #ffffff;
+            text-shadow:
+                0 0 8px #ffffff,
+                0 0 16px rgba(255, 255, 255, 0.4),
+                0 0 24px rgba(255, 255, 255, 0.15);
+        }
+
+        .blended-button.off-state .blended-label {
+            color: #cccccc;
+            text-shadow:
+                0 0 6px #cccccc,
+                0 0 10px rgba(200, 200, 200, 0.3);
+        }
+
+        .blended-button.off-state .blended-accent {
+            color: #ffffff;
+            text-shadow:
+                0 0 6px #ffffff,
+                0 0 10px rgba(255, 255, 255, 0.3);
+            border: 2px solid #ffffff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .status-light.off {
+            background: #ffffff;
+            animation: pulse-white 2s infinite;
+        }
+
         .description {
             text-align: center;
             font-size: 12px;
@@ -312,6 +357,7 @@
         <div class="design-section" style="flex: 1; min-width: 300px;">
             <div class="label">Blended Design - A320 Overhead Panel</div>
             <div class="button-grid">
+                <!-- ON STATE -->
                 <!-- APU Master -->
                 <div>
                     <div class="blended-button">
@@ -324,7 +370,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">Auxiliary Power Unit Control</div>
+                    <div class="description">ON - Green Active</div>
                 </div>
 
                 <!-- Engine Start -->
@@ -339,7 +385,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">Engine 1 Start Control</div>
+                    <div class="description">ON - Green Active</div>
                 </div>
 
                 <!-- Hydraulic Pump -->
@@ -354,7 +400,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">Hydraulic System Pressure</div>
+                    <div class="description">ON - Green Active</div>
                 </div>
 
                 <!-- Anti-Ice System -->
@@ -369,7 +415,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">Wing Anti-Ice Protection</div>
+                    <div class="description">ON - Green Active</div>
                 </div>
 
                 <!-- Pneumatic Bleed -->
@@ -384,7 +430,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">Engine Bleed Air Supply</div>
+                    <div class="description">ON - Green Active</div>
                 </div>
 
                 <!-- AC Bus Power -->
@@ -399,7 +445,98 @@
                             </div>
                         </div>
                     </div>
-                    <div class="description">AC Electrical Bus Power</div>
+                    <div class="description">ON - Green Active</div>
+                </div>
+
+                <!-- OFF STATE -->
+                <!-- APU Master OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">APU</div>
+                            <div class="blended-main">MASTER</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">OFF</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
+                </div>
+
+                <!-- Engine Start OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">ENG 1</div>
+                            <div class="blended-main">START</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">IDLE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
+                </div>
+
+                <!-- Hydraulic Pump OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">HYD PUMP</div>
+                            <div class="blended-main">PRESS</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">LOW</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
+                </div>
+
+                <!-- Anti-Ice System OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">ANTI-ICE</div>
+                            <div class="blended-main">WING</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">STBY</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
+                </div>
+
+                <!-- Pneumatic Bleed OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">BLEED</div>
+                            <div class="blended-main">AIR</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">CLOSED</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
+                </div>
+
+                <!-- AC Bus Power OFF -->
+                <div>
+                    <div class="blended-button off-state">
+                        <div class="blended-content">
+                            <div class="blended-label">AC BUS</div>
+                            <div class="blended-main">PWR</div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="status-light off"></div>
+                                <div class="blended-accent">BACKUP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">OFF - White Standby</div>
                 </div>
             </div>
             <div class="description" style="margin-top: 20px;">Realistic A320 overhead panel buttons with blended neon aesthetic</div>
