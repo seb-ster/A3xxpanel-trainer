@@ -105,9 +105,9 @@
             height: 40px;
             padding: 0;
             border: none;
-            background: #444;
-            color: white;
-            font-size: 9px;
+            background: linear-gradient(to bottom, #444 50%, white 50%, white 90%, #444 90%);
+            color: black;
+            font-size: 6px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 0;
@@ -116,21 +116,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: visible;
+            line-height: 1;
         }
 
         .switch-btn:hover {
-            background: #555;
+            background: linear-gradient(to bottom, #555 50%, white 50%, white 90%, #555 90%);
         }
 
         .switch-btn.active {
-            background: var(--active-color);
+            background: linear-gradient(to bottom, var(--active-color) 50%, white 50%, white 90%, var(--active-color) 90%);
             color: black;
             box-shadow: 0 0 8px rgba(0,221,0,0.6);
         }
 
         .switch-btn[data-value="OFF"] {
-            background: #444;
-            color: white;
+            background: linear-gradient(to bottom, #444 50%, white 50%, white 90%, #444 90%);
+            color: black;
         }
 
         .three-way-selector {
