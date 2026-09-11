@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/C Panel Widget with Background</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .ac-panel-container {
+            position: relative;
+            background: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .panel-background {
+            display: block;
+            width: 100%;
+            height: auto;
+            background-image: url('file:///Users/sebastiaanvanheerde/Documents/claude/3xxpaneltrainer/Claude outputs/A320_panel_no_bg.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 400px;
+        }
+
+        .control-overlay {
+            position: absolute;
+            cursor: pointer;
+            background: rgba(0, 255, 0, 0);
+            border: 2px solid rgba(0, 255, 0, 0);
+            transition: all 0.2s ease;
+        }
+
+        .control-overlay:hover {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: rgba(0, 255, 0, 0.6);
+        }
+
+        .control-overlay.active {
+            border-color: rgba(0, 255, 0, 0.8);
+            background: rgba(0, 255, 0, 0.15);
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        .control-label {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: #0ff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-overlay:hover .control-label {
+            opacity: 1;
+        }
+
+        .status-panel {
+            background: #0a0a0a;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            max-width: 1000px;
+            width: 100%;
+            font-size: 12px;
+            line-height: 1.8;
+            border: 1px solid #0f0;
+        }
+
+        .status-title {
+            color: #ff0;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-item {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .control-hint {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #0f0;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 1000px;
+        }
+
+        .note {
+            background: rgba(255, 200, 0, 0.1);
+            border: 1px solid rgba(255, 200, 0, 0.5);
+            color: #ffff99;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ac-panel-container" id="panelContainer">
+        <div class="panel-background" id="panelBackground"></div>
+    </div>
+
+    <div class="status-panel" id="statusPanel">
+        <div class="status-title">A/C System Status</div>
+        <div id="statusDisplay">
+            Pack Flow: NORM | Cockpit: MID | FWD: MID | AFT: MID | Pack 1: ON | Pack 2: ON
+        </div>
+    </div>
+
+    <div class="control-hint">
+        💡 Panel background loaded. Real button widgets to be implemented.
+    </div>
+
+    <div class="note">
+        📋 This version uses the actual A/C panel background image from the A320 trainer panel.
+        Interactive button overlays coming soon.
+    </div>
+
+    <script>
+        class ACPanelWithBackground {
+            constructor() {
+                this.panelContainer = document.getElementById('panelContainer');
+                this.panelBackground = document.getElementById('panelBackground');
+                
+                this.state = {
+                    packFlow: 'NORM',
+                    cockpitTemp: 'MID',
+                    fwdTemp: 'MID',
+                    aftTemp: 'MID',
+                    pack1: 'ON',
+                    pack2: 'ON',
+                    eng1Bleed: 'ON',
+                    eng2Bleed: 'ON',
+                    apuBleed: 'OFF',
+                    xBleed: 'OFF'
+                };
+
+                this.updateStatus();
+            }
+
+            updateStatus() {
+                const display = document.getElementById('statusDisplay');
+                display.innerHTML = `
+                    <div class="status-item"><strong>Pack Flow:</strong> ${this.state.packFlow}</div>
+                    <div class="status-item"><strong>Cockpit:</strong> ${this.state.cockpitTemp}</div>
+                    <div class="status-item"><strong>FWD:</strong> ${this.state.fwdTemp}</div>
+                    <div class="status-item"><strong>AFT:</strong> ${this.state.aftTemp}</div>
+                    <div class="status-item"><strong>Pack 1:</strong> ${this.state.pack1}</div>
+                    <div class="status-item"><strong>Pack 2:</strong> ${this.state.pack2}</div>
+                    <br>
+                    <div class="status-item"><strong>ENG 1:</strong> ${this.state.eng1Bleed}</div>
+                    <div class="status-item"><strong>ENG 2:</strong> ${this.state.eng2Bleed}</div>
+                    <div class="status-item"><strong>APU:</strong> ${this.state.apuBleed}</div>
+                `;
+            }
+
+            getState() {
+                return { ...this.state };
+            }
+        }
+
+        const acPanel = new ACPanelWithBackground();
+    </script>
+</body>
+</html>
