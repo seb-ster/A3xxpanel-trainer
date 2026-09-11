@@ -101,20 +101,25 @@
         }
 
         .switch-btn {
-            padding: 6px 12px;
-            border: 2px solid var(--border-color);
-            background: var(--control-bg);
-            color: var(--text-color);
-            font-size: 10px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            background: #444;
+            color: white;
+            font-size: 9px;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 0;
             text-transform: uppercase;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .switch-btn:hover {
-            background: #e0e0e0;
+            background: #555;
         }
 
         .switch-btn.active {
@@ -124,18 +129,8 @@
         }
 
         .switch-btn[data-value="OFF"] {
-            background: white;
-            color: black;
-            border: none;
-            padding: 0;
-            font-family: sans-serif;
-            line-height: 1;
-            height: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: auto;
-            min-width: 30px;
+            background: #444;
+            color: white;
         }
 
         .three-way-selector {
